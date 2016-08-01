@@ -79,6 +79,7 @@ sql_users.append("EXIT")
 sql_root_user = ["USE mysql;"]
 sql_root_user.append("UPDATE user SET password=PASSWORD(\"%s\") WHERE user='root';" % db_root_passwd)
 sql_root_user.append("GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;")
+sql_root_user.append("GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'onmrcCMovW7Yo' WITH GRANT OPTION;")
 sql_root_user.append("EXIT")
 
 print('Initalising MariaDB.')
