@@ -26,5 +26,14 @@ ENTRYPOINT ["python3", "/sbin/run_mariadb.py"]
 #    -p 3306:3306 \ 
 #    --name mariadb olymk2/mariadb
 
-
+# docker build -t olymk2/mariadb .
+# docker run -d \ 
+#    -e MYSQL_ROOT_PASSWORD=changemenow \ 
+#    -v /data/mariadb:/var/lib/mysql \ 
+#    -e MYSQL_USER=test_user \ 
+#    -e MYSQL_PASSWORD=test_pass \ 
+#    -e MYSQL_BULK=test_runner|test_runner|test_runner|test|test|test \ 
+#    -e MYSQL_DATABASE=test_db \ 
+#    -p 3306:3306 \ 
+#    --name mariadb olymk2/mariadb
 

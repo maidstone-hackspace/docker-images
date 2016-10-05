@@ -63,16 +63,26 @@ db_root_passwd = getenv('MYSQL_ROOT_PASSWORD', check_output(['pwgen', '16', '1']
 db_passwd = getenv('MYSQL_PASSWORD', '')
 db_user = getenv('MYSQL_USER', '')
 db_database = getenv('MYSQL_DATABASE', '')
+db_bulk = getenv('MYSQL_BULK', '')
 
 sql_clean_db = [
     "DROP DATABASE test;",
     "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%';"]
 
 sql_users = ["USE mysql;"]
+if db_bulk:
+    bulk_create = db_bulk.split('|')
+    bulk_it = iter(bulk_create)
+    for bulk_db, bulk_user, bulk_password in zip(bulk_it, bulk_it, bulk_it):
+        sql_users.append("CREATE DATABASE IF NOT EXISTS `%s` CHARACTER SET utf8 COLLATE utf8_general_ci;" % (bulk_db))
+        sql_users.append("GRANT ALL ON `%s`.* to '%s'@'%%' IDENTIFIED BY '%s';" % (bulk_db, bulk_user, bulk_passwd))
+        sql_users.append("GRANT ALL ON `%s`.* to '%s'@'localhost' IDENTIFIED BY '%s';" % (bulk_db, bulk_user, bulk_passwd))
+
 if db_database:
     sql_users.append("CREATE DATABASE IF NOT EXISTS `%s` CHARACTER SET utf8 COLLATE utf8_general_ci;" % (db_database))
 if db_user:
     sql_users.append("GRANT ALL ON `%s`.* to '%s'@'%%' IDENTIFIED BY '%s';" % (db_database, db_user, db_passwd))
+    sql_users.append("GRANT ALL ON `%s`.* to '%s'@'localhost' IDENTIFIED BY '%s';" % (db_database, db_user, db_passwd))
 sql_users.append("FLUSH PRIVILEGES;")
 sql_users.append("EXIT")
 
@@ -112,6 +122,7 @@ environ['MYSQL_ROOT_PASSWORD'] = ''
 environ['MYSQL_PASSWORD'] = ''
 environ['MYSQL_USER'] = ''
 environ['MYSQL_DATABASE'] = ''
+environ['MYSQL_BULK'] = ''
 
 print('MariaDB ready to rock and roll!')
 mariadb.wait()
