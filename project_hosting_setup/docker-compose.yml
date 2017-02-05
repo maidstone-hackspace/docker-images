@@ -1,0 +1,63 @@
+version: '2'
+
+services:
+
+  gitea:
+    container_name: gitea
+    image: gitea/gitea
+    ports:
+      - "10080:3000"
+      - "10022:22"
+    volumes:
+      - /data/gitea/:/data
+    restart: always
+  drone-server:
+    image: drone/drone:0.5
+    ports:
+      - "10081:8000"
+    networks:
+      - drone
+    volumes:
+      - ./data/drone:/var/lib/drone/
+    environment:
+      I_UNDERSTAND_I_AM_USING_AN_UNSTABLE_VERSION: "true"
+      I_AGREE_TO_FIX_BUGS_AND_NOT_FILE_BUGS: "true"
+      DRONE_SERVER_ADDR: ":8000"
+      DRONE_DEBUG: "true"
+      DRONE_SECRET: "${SECRET}"
+      DRONE_DATABASE_DRIVER: sqlite3
+      DRONE_DATABASE_DATASOURCE: /var/lib/drone/drone.sqlite
+      DRONE_OPEN: "true"
+      DRONE_ORGS: ""
+      DRONE_ADMIN: admin,users,here
+      DRONE_ADMIN_ALL: "false"
+      DRONE_GOGS: "true"
+      DRONE_GOGS_URL: "${DRONE_URL}"
+      DRONE_GOGS_SKIP_VERIFY: "true"
+      DRONE_GOGS_PRIVATE_MODE: "true"
+
+  drone-agent:
+    image: drone/drone:0.5
+    command: agent
+    depends_on:
+      - drone-server
+    networks:
+      - drone
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      I_UNDERSTAND_I_AM_USING_AN_UNSTABLE_VERSION: "true"
+      I_AGREE_TO_FIX_BUGS_AND_NOT_FILE_BUGS: "true"
+      DRONE_SERVER: ws://drone-server:8000/ws/broker
+      DRONE_DEBUG: "true"
+      DRONE_SECRET: "${SECRET}"
+
+  pastebin:
+    image: olymk2/dpaste
+    ports:
+      - "10082:8000"
+
+
+networks:
+  drone:
+    driver: bridge

@@ -2,18 +2,21 @@ version: '2'
 
 services:
   nginx:
-    build: .
+    image: olymk2/nginx
     container_name: "nginx"
     restart: unless-stopped
+    networks: 
+      - external
     ports:
       - 443:443
     volumes:
       - sockets:/data/sockets
+      - /var/www/letsencrypt/:/var/www/letsencrypt/
       - /etc/letsencrypt/:/etc/letsencrypt/
       - /etc/nginx/sites-enabled/:/etc/nginx/sites-enabled/
 
 networks:
-  internal:
+  external:
     driver: bridge
 
 volumes:

@@ -1,0 +1,13 @@
+* Intro
+Quick setup of your own code hosting with integrated CI service.
+
+* Configuration
+Edit the .env file with your settings, domain and secret will need changing
+* Setup
+Bring up the containers with
+#+BEGIN_SRC shell
+docker-compose up -d
+#+END_SRC
+
+* GOGS
+* Drone
