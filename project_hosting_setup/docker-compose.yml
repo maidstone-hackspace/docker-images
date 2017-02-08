@@ -4,6 +4,7 @@ services:
 
   gitea:
     image: gitea/gitea
+#    pull: true
     ports:
       - "10080:3000"
       - "10022:22"
@@ -29,9 +30,9 @@ services:
       DRONE_SECRET: "${SECRET}"
       DRONE_DATABASE_DRIVER: sqlite3
       DRONE_DATABASE_DATASOURCE: /var/lib/drone/drone.sqlite
-      DRONE_OPEN: "true"
-#      DRONE_ORGS: "drone, gogs"
-      DRONE_ADMIN: oly
+      DRONE_OPEN: "false"
+      DRONE_ORGS: ${DRONE_ORG}
+      DRONE_ADMIN: ${DRONE_ADMIN}
       DRONE_ADMIN_ALL: "false"
       DRONE_GOGS: "true"
       DRONE_GOGS_URL: "${DRONE_URL}"
