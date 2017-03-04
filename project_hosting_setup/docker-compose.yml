@@ -4,7 +4,6 @@ services:
 
   gitea:
     image: gitea/gitea
-    pull: true
     ports:
       - "10080:3000"
       - "10022:22"
@@ -14,7 +13,6 @@ services:
 
   drone-server:
     image: drone/drone:0.5
-    pull: true
     ports:
       - "10081:8000"
     networks:
@@ -42,7 +40,6 @@ services:
 
   drone-agent:
     image: drone/drone:0.5
-    pull: true
     command: agent
     depends_on:
       - drone-server
