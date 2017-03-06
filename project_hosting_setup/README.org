@@ -1,13 +1,27 @@
 * Intro
-Quick setup of your own code hosting with integrated CI service.
+Quick setup to host your own code with integrated CI service and pastebin.
 
 * Configuration
-Edit the .env file with your settings, domain and secret will need changing
+Edit the .env file with your settings, secret will need changing, the domains may need changin but by default use the container names so should work.
 * Setup
 Bring up the containers with
 #+BEGIN_SRC shell
 docker-compose up -d
 #+END_SRC
 
+* change something edit the docker compose file env or gitea conf then run these
+#+BEGIN_SRC shell
+docker-compose down 
+docker-compose up -d
+#+END_SRC
+
+* NGINX
+ This is setup to expose nginx and proxy to gitea and drone, copy the configs to /etc/nginx/sites-enabled and replace mydomain with your domain and generate your certs.
+
+ If you dont want to use nginx disable in docker-compose and expose the ports of the other containers to the outside world.
+  
 * GOGS
+ - to edit the gitea config at a later date look in data/gitea/gitea/conf
+ - to view the logs look in data/gitea/gitea/log
 * Drone
+ - view the logs with docker-compose logs -f
