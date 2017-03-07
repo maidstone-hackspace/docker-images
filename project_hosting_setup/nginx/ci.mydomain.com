@@ -46,12 +46,16 @@ server {
     error_page 404 = /404.htm;
 
     location / {
-        proxy_pass http://app-drone;
         proxy_set_header Host             $host;
         proxy_set_header X-Real-IP        $remote_addr;
         proxy_set_header X-Forwarded-For  $proxy_add_x_forwarded_for;
         #max_body_size will allow you to upload a large git repository
         client_max_body_size 100M;
+
+        #to resolve err-content-length-mismatch also breaks http clone
+        proxy_max_temp_file_size 0;
+        proxy_pass http://app-drone;
+
     }
 
 }
